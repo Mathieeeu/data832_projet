@@ -8,3 +8,7 @@ Explication recall, precision, f1-score
 
 Paramètres différents 
 - fonction d'activation
+
+Résolution d'erreurs avec svm et xgb (les fit marchent pas >.<)
+pour xgb -> attendait des valeurs numériques suffit de mettre un encoder
+pour svm -> mauvais choix des paramètres

@@ -28,6 +28,24 @@ class MusicGenreRNN(nn.Module):
         # Decode the hidden state of the last time step
         out = self.fc(out[:, -1, :])
         return out
+    
+class MusicGenreLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers, num_classes):
+        super(MusicGenreLSTM, self).__init__()
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, num_classes)
+
+    def forward(self, x):
+        
+        # Forward propagate LSTM
+        _, (h_n, _) = self.lstm(x)
+
+        # Decode the hidden state of the last time step
+        out = self.fc(h_n[-1])
+
+        return out
 
 seed = 18
 
@@ -64,12 +82,12 @@ hidden_size = 128
 num_layers = 3
 num_classes = 10
 
-model = MusicGenreRNN(input_size, hidden_size, num_layers, num_classes).to(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
+# model = MusicGenreRNN(input_size, hidden_size, num_layers, num_classes).to(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
+model = MusicGenreLSTM(input_size, hidden_size, num_layers, num_classes).to(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.005, weight_decay=1e-5, amsgrad=True, eps=1e-8, betas=(0.9, 0.999))
 
 num_epochs = 100
-
 
 for epoch in range(num_epochs):    
     outputs = model(X_train)
