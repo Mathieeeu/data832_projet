@@ -99,57 +99,22 @@ y_test = torch.tensor(y_test.values, dtype=torch.long)    # Convertir en tableau
 # plt.tight_layout()
 # plt.show()
 
-# Réduction de dimension avec PCA
-def plot_pca(X, y, labels):
-    pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X)
-    
-    plt.figure(figsize=(10, 6))
-    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', alpha=0.7)
-    cbar = plt.colorbar(scatter, ticks=range(len(labels)))
-    cbar.set_label('Genres')
-    cbar.set_ticks(np.arange(len(labels)))
-    cbar.set_ticklabels(labels)
-    plt.title("PCA - Réduction de Dimension (2D)")
-    plt.show()
-
-# Réduction de dimension avec t-SNE
-def plot_tsne(X, y, labels):
-    tsne = TSNE(n_components=2, perplexity=30, random_state=42)
-    X_tsne = tsne.fit_transform(X)
-    
-    plt.figure(figsize=(10, 6))
-    scatter = plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='tab10', alpha=0.7)
-    cbar = plt.colorbar(scatter, ticks=range(len(labels)))
-    cbar.set_label('Genres')
-    cbar.set_ticks(np.arange(len(labels)))
-    cbar.set_ticklabels(labels)
-    plt.title("t-SNE - Visualisation des genres")
-    plt.show()
-
-# Appel des fonctions avec X_test et y_test
-#plot_pca(X_test, y_test, label_encoder.classes_)
-# plot_tsne(X_test, y_test, label_encoder.classes_) # Moins bien que PCA
 
 def plot_pca_with_centers(X, y, labels):
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)
     
     plt.figure(figsize=(10, 6))
-    
-    # Visualisation des points
     scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', alpha=0.7)
     
     # Ajouter les points moyens pour chaque genre
     centers = []
     for label in np.unique(y):
-        # Calcul des points moyens
         mean_point = np.mean(X_pca[y == label], axis=0)
         centers.append(mean_point)
-        # Affichage du point moyen
+
         plt.scatter(mean_point[0], mean_point[1], marker='x', s=200, c=[scatter.cmap(scatter.norm(label))], edgecolor='white', label=labels[label])
 
-    # Créer une colorbar avec les noms des genres
     cbar = plt.colorbar(scatter, ticks=range(len(labels)))
     cbar.set_label('Genres')
     cbar.set_ticks(np.arange(len(labels)))
@@ -159,7 +124,6 @@ def plot_pca_with_centers(X, y, labels):
     plt.legend(loc='upper right')
     plt.show()
 
-# Appel de la fonction avec les données
 plot_pca_with_centers(X_test, y_test, label_encoder.classes_)
 
 
