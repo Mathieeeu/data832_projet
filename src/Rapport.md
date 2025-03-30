@@ -1,3 +1,19 @@
+# DATA832 - Classification de genres musicaux
+
+_Mathieu - Louna_
+
+-------------------------------------------
+
+## Structure des données
+
+## Différentes approches
+
+### Keras
+
+### Torch
+
+### Torch & Librosa
+
 ## Chat GPT
 
 Problème de dimensionnement du réseau de neurones ("J'ai une erreur de dimension avec la matrice de confusion")
@@ -12,3 +28,8 @@ Paramètres différents
 Résolution d'erreurs avec svm et xgb (les fit marchent pas >.<)
 pour xgb -> attendait des valeurs numériques suffit de mettre un encoder
 pour svm -> mauvais choix des paramètres
+
+
+## Amélioration possible
+
+## Conclusion

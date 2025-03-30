@@ -2,6 +2,8 @@ import os
 import librosa
 import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -17,7 +19,7 @@ dataset_dir = 'D:/data/projet-data832' # A EDITER SI BESOIN
 
 # Chemins à ne pas toucher !!!
 data_dir = os.path.join(dataset_dir, 'genres_original') # répertoire contenant les fichiers .wav
-features_file = './data/features.csv' # fichier CSV pour stocker les caractéristiques extraites (et économiser des HEURES)
+features_file = './data/features-complet.csv' # fichier CSV pour stocker les caractéristiques extraites (et économiser des HEURES)
 
 # Extraction des caractéristiques du fichier audio
 def extract_features(file_path):
@@ -79,6 +81,88 @@ y_train = torch.tensor(y_train.values, dtype=torch.long)  # Convertir en tableau
 X_test = torch.tensor(X_test, dtype=torch.float32)
 y_test = torch.tensor(y_test.values, dtype=torch.long)    # Convertir en tableau NumPy avec .values
 
+
+# # Distribution des caratéristiques audio avec courbe KDE (Kernel Density Estimation)
+# audio_features = df.drop(columns=['label'])
+# #Récupération des noms des colonnes
+
+# feature_names = (pd.read_csv("./data/features_30_sec.csv")).columns.tolist()
+
+# plt.figure(figsize=(10, 7))
+# for i, col in enumerate(audio_features.columns[2:12]):  # Limité à 10
+#     plt.subplot(5, 2, i + 1)
+#     sns.histplot(audio_features[col], bins=30, kde=True)
+#     plt.title(f'Caractéristique {col} : {feature_names[i+2]}')
+#     plt.xlabel('Valeur')
+#     plt.ylabel('Densité')
+# plt.suptitle('Distribution des caractéristiques audio avec courbe KDE', fontsize=16)
+# plt.tight_layout()
+# plt.show()
+
+# Réduction de dimension avec PCA
+def plot_pca(X, y, labels):
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X)
+    
+    plt.figure(figsize=(10, 6))
+    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', alpha=0.7)
+    cbar = plt.colorbar(scatter, ticks=range(len(labels)))
+    cbar.set_label('Genres')
+    cbar.set_ticks(np.arange(len(labels)))
+    cbar.set_ticklabels(labels)
+    plt.title("PCA - Réduction de Dimension (2D)")
+    plt.show()
+
+# Réduction de dimension avec t-SNE
+def plot_tsne(X, y, labels):
+    tsne = TSNE(n_components=2, perplexity=30, random_state=42)
+    X_tsne = tsne.fit_transform(X)
+    
+    plt.figure(figsize=(10, 6))
+    scatter = plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='tab10', alpha=0.7)
+    cbar = plt.colorbar(scatter, ticks=range(len(labels)))
+    cbar.set_label('Genres')
+    cbar.set_ticks(np.arange(len(labels)))
+    cbar.set_ticklabels(labels)
+    plt.title("t-SNE - Visualisation des genres")
+    plt.show()
+
+# Appel des fonctions avec X_test et y_test
+#plot_pca(X_test, y_test, label_encoder.classes_)
+# plot_tsne(X_test, y_test, label_encoder.classes_) # Moins bien que PCA
+
+def plot_pca_with_centers(X, y, labels):
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X)
+    
+    plt.figure(figsize=(10, 6))
+    
+    # Visualisation des points
+    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', alpha=0.7)
+    
+    # Ajouter les points moyens pour chaque genre
+    centers = []
+    for label in np.unique(y):
+        # Calcul des points moyens
+        mean_point = np.mean(X_pca[y == label], axis=0)
+        centers.append(mean_point)
+        # Affichage du point moyen
+        plt.scatter(mean_point[0], mean_point[1], marker='x', s=200, c=[scatter.cmap(scatter.norm(label))], edgecolor='white', label=labels[label])
+
+    # Créer une colorbar avec les noms des genres
+    cbar = plt.colorbar(scatter, ticks=range(len(labels)))
+    cbar.set_label('Genres')
+    cbar.set_ticks(np.arange(len(labels)))
+    cbar.set_ticklabels(labels)
+    
+    plt.title("PCA - Réduction de Dimension avec Centres des Genres")
+    plt.legend(loc='upper right')
+    plt.show()
+
+# Appel de la fonction avec les données
+plot_pca_with_centers(X_test, y_test, label_encoder.classes_)
+
+
 # Définition du modèle de réseau de neurones récurrent (RNN)
 class RNNClassifier(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, num_classes, dropout):
@@ -120,16 +204,36 @@ class DenseClassifier(nn.Module):
         out = self.dropout(out)
         out = self.fc3(out)
         return out
+    
+# modèle de réseau de neurones convolutif (CNN)
+class CNNClassifier(nn.Module):
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(CNNClassifier, self).__init__()
+        self.conv1 = nn.Conv1d(1, hidden_size//2, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv1d(hidden_size//2, hidden_size, kernel_size=3, stride=1, padding=1)
+        self.fc1 = nn.Linear(hidden_size * input_size, hidden_size*2)
+        self.fc2 = nn.Linear(hidden_size*2, num_classes)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        x = x.unsqueeze(-1).permute(0, 2, 1)  # Transforme (batch, features) -> (batch, channels, sequence_length)
+        x = nn.functional.relu(self.conv1(x))
+        x = nn.functional.relu(self.conv2(x))
+        x = x.view(x.size(0), -1)
+        x = nn.functional.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
 
 ##########################################################
 # Hyperparamètres (à modifier si besoin)
 input_size = X_train.shape[1]
 num_classes = len(label_encoder.classes_)
 
-model_type = 'dense' # 'rnn' ou 'dense'
+model_type = 'cnn' # 'rnn' ou 'dense' ou 'cnn'
 hidden_size = 128
 num_layers = 2
-dropout = 0.01 # taux de dropout (càd le pourcentage de neurones à ignorer pendant l'entrainement pour éviter le surapprentissage)
+dropout = 0.001 # taux de dropout (càd le pourcentage de neurones à ignorer pendant l'entrainement pour éviter le surapprentissage)
 
 num_epochs = 500 # maximum
 learning_rate = 0.003
@@ -143,8 +247,10 @@ if model_type == 'rnn':
     model = RNNClassifier(input_size, hidden_size, num_layers, num_classes, dropout)
 elif model_type == 'dense':
     model = DenseClassifier(input_size, hidden_size, num_classes, dropout)
+elif model_type == 'cnn':
+    model = CNNClassifier(input_size, hidden_size, num_classes)
 else:
-    raise ValueError("Type de modèle non reconnu. Choisissez 'rnn' ou 'dense'.")
+    raise ValueError("Type de modèle non reconnu. Choisissez 'rnn' , 'cnn' ou 'dense'.")
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
@@ -220,3 +326,4 @@ with torch.no_grad():
     plt.xlabel('Classe prédite')
     plt.ylabel('Classe réelle')
     plt.show()
+    
