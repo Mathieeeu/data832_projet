@@ -25,7 +25,7 @@ Nous avons testé différentes approches et librairies afin de trouver le meille
 
 ### Torch & Librosa
 
-## Appel à un ami
+## Appel à un "ami"
 
 Nous avons principalement utilisé l'IA (notamment ChatGPT) pour résoudre des problèmes configurations de paramètres.
 

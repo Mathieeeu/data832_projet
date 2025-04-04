@@ -1,5 +1,10 @@
-data/*
-output/*
+*/__pycache__/*
+env/*
+
 models/*
+data/*
+!data/features-complet.csv
+# On laisse un fichier de features extraites pour l'avoir sans devoir retélécharger tous les extraits audio
+
 *.pdf
 test.*
