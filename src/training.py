@@ -14,7 +14,7 @@ def train_model(
         model_type: str = 'cnn',
         hidden_size: int = 128,
         num_layers: int = 2,
-        dropout: float = 0.001,
+        dropout: float = 0.1,
         learning_rate: float = 0.003,
         num_epochs: int = 500,
         early_stopping: bool = True,
@@ -33,7 +33,7 @@ def train_model(
     elif model_type == 'dense':
         model = DenseClassifier(input_size, hidden_size, num_classes, dropout)
     elif model_type == 'cnn':
-        model = CNNClassifier(input_size, hidden_size, num_classes)
+        model = CNNClassifier(input_size, hidden_size, num_classes, dropout)
     else:
         raise ValueError("Type de modèle non reconnu. Choisissez 'rnn' , 'cnn' ou 'dense'.")
 

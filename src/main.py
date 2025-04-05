@@ -29,14 +29,14 @@ def main(display_plots: bool = True) -> None:
     use_pretrained = False # utiliser un modèle déjà entrainé ?
     save_new_model = False # sauvegarder le modèle après l'entrainement ?
 
-    model_type = 'cnn' # 'rnn' ou 'dense' ou 'cnn'
-    hidden_size = 128
+    model_type = 'rnn' # 'rnn' ou 'dense' ou 'cnn'
+    hidden_size = 256
     num_layers = 2
-    dropout = 0.5 
+    dropout = 0.3
     # taux de dropout = le pourcentage de neurones à ignorer pendant l'entrainement pour éviter le surapprentissage)
 
     num_epochs = 500 # maximum
-    learning_rate = 0.0001
+    learning_rate = 0.0005
 
     early_stopping = True # arret anticipé de l'entrainement
     patience = 10  # Patience pour l'arret anticipé 

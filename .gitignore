@@ -5,6 +5,10 @@ models/*
 data/*
 !data/features-complet.csv
 # On laisse un fichier de features extraites pour l'avoir sans devoir retélécharger tous les extraits audio
+!data/hyperparameter_tuning_results.csv
+# Celui là aussi pour pas devoir le refaire (~2h d'exécution)
 
 *.pdf
 test.*
+
+output/*
