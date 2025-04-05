@@ -1,8 +1,6 @@
 import pandas as pd
 import torch
 import torch.optim as optim
-
-
 from sklearn.metrics import accuracy_score
 from feature_extraction import extract_features
 from preprocess import preprocess_data
