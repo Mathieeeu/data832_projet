@@ -36,7 +36,6 @@ def evaluate_model(X_train, X_test, y_train, y_test, label_encoder, model_type, 
 
     return accuracy, loss
 
-# Définir la grille d'hyperparamètres
 param_grid = {
     'model_type': ['rnn', 'cnn', 'dense'],
     'hidden_size': [64, 128, 256],
@@ -48,13 +47,11 @@ param_grid = {
     'patience': [5],
 }
 
-# Préparation des données
 data_dir = 'D:/data/projet-data832/genres_original'
 features_file = './data/features-complet.csv'
 df = extract_features(data_dir, features_file)
 X_train, X_test, y_train, y_test, label_encoder = preprocess_data(df)
 
-# Recherche sur grille
 results = []
 n = 0
 for params in ParameterGrid(param_grid):
@@ -65,32 +62,12 @@ for params in ParameterGrid(param_grid):
                     params['dropout'], params['learning_rate'], params['num_epochs'],
                     params['early_stopping'], params['patience'], accuracy, loss])
 
-# Création d'un DataFrame pour les résultats
 results_df = pd.DataFrame(results, columns=[
     'Model Type', 'Hidden Size', 'Num Layers', 'Dropout', 'Learning Rate',
     'Num Epochs', 'Early Stopping', 'Patience', 'Accuracy', 'Loss'
 ])
 
-# Tri des résultats par précision décroissante
 results_df.sort_values(by='Accuracy', ascending=False, inplace=True)
 results_df.reset_index(drop=True, inplace=True)
-
-# Affichage des résultats
-print(results_df)
-
-# Enregistrement des résultats dans un fichier CSV
 results_df.to_csv('./data/hyperparameter_tuning_results.csv', index=False)
-
-# Visualisation (exemple avec un graphique simple)
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(12, 6))
-for model_type in param_grid['model_type']:
-    subset = results_df[results_df['Model Type'] == model_type]
-    plt.plot(subset['Accuracy'], subset['Loss'], label=model_type, marker='o')
-
-plt.xlabel('Accuracy')
-plt.ylabel('Loss')
-plt.title('Model Performance')
-plt.legend()
-plt.show()
+print(results_df)
