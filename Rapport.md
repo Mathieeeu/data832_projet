@@ -115,7 +115,7 @@ Pour finir, les deux graphiques ci-dessous montrent les résultats obtenus en fo
 
 On peut y voir que le type de réseau a un impact important sur les résultats. En effet, les meilleurs résultats sont obtenus avec des réseaux récurrents et denses (malgré le fait que les performances les moins bonnes le soient également). On voit aussi que le learning rate semble avoir un véritable impact mais il est difficile de savoir lequel est le meilleur.
 
-Le modèle que nous avons choisi d'utiliser dans notre projet est donc un réseau de neurones récurrent (RNN) avec 256 neurones par couche, 2 couches cachées, un taux de dropout de 0.3 et un taux d'apprentissage de 0.0005. Ce modèle a donné les meilleurs résultats lors de nos tests, ce qui nous a permis de passer de 68% à 76% de précision dans les meilleurs cas. L'ensemble des résultats de la phase d'optimisation des hyperparamètres est disponible dans le fichier `data/hyperparameters_results.csv` sur le dépôt GitHub du projet car il a été très long à générer (environ 2 heures).
+Le modèle que nous avons choisi d'utiliser dans notre projet est donc un réseau de neurones récurrent (RNN) avec 256 neurones par couche, 2 couches cachées, un taux de dropout de 30% et un taux d'apprentissage de 0.0005. Ce modèle est celui qui a donné les meilleurs résultats lors de nos tests, ce qui nous a permis de passer de 68% à 76% de précision dans les meilleurs cas. L'ensemble des résultats de la phase d'optimisation des hyperparamètres est disponible dans le fichier `data/hyperparameters_results.csv` sur le dépôt du projet car il a été très long à générer (environ 2 heures).
 
 ## Appel à un "ami"
 
