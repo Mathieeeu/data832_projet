@@ -21,6 +21,7 @@ def evaluate_model(X_train, X_test, y_train, y_test, label_encoder, model_type, 
         patience=params['patience']
     )
 
+    # évaluation du modèle
     model.eval()
     with torch.no_grad():
         if model_type == 'rnn':
@@ -33,6 +34,7 @@ def evaluate_model(X_train, X_test, y_train, y_test, label_encoder, model_type, 
 
     return accuracy, loss
 
+# Grille d'hyperparamètres à tester (2700 combinaisons ici)
 param_grid = {
     'model_type': ['rnn', 'cnn', 'dense'],
     'hidden_size': [64, 128, 256],
@@ -64,6 +66,7 @@ results_df = pd.DataFrame(results, columns=[
     'Num Epochs', 'Early Stopping', 'Patience', 'Accuracy', 'Loss'
 ])
 
+# affichage et exportation des résultats en csb
 results_df.sort_values(by='Accuracy', ascending=False, inplace=True)
 results_df.reset_index(drop=True, inplace=True)
 results_df.to_csv('./data/hyperparameter_tuning_results.csv', index=False)
