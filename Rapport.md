@@ -119,7 +119,7 @@ Le modèle que nous avons choisi d'utiliser dans notre projet est donc un résea
 
 ## Appel à un "ami"
 
-Nous avons principalement utilisé l'IA (notamment ChatGPT) pour résoudre des problèmes configurations de paramètres.
+Nous avons principalement utilisé l'IA (essentiellement Mistral) pour résoudre des problèmes configurations de paramètres.
 
 Le premier prompt que nous avons fait concerne la matrice de confusion (modèle utilisant les csv fournis).
 
