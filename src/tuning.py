@@ -1,6 +1,5 @@
 import pandas as pd
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import ParameterGrid
 from sklearn.metrics import accuracy_score
