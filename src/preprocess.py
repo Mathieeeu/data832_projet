@@ -17,8 +17,8 @@ def preprocess_data(df: pd.DataFrame) -> tuple:
 
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, df['label_encoded'], test_size=0.2, random_state=42)
     X_train = torch.tensor(X_train, dtype=torch.float32)
-    y_train = torch.tensor(y_train.values, dtype=torch.long)  # Convertir en tableau NumPy avec .values
+    y_train = torch.tensor(y_train.values, dtype=torch.long)
     X_test = torch.tensor(X_test, dtype=torch.float32)
-    y_test = torch.tensor(y_test.values, dtype=torch.long)    # Convertir en tableau NumPy avec .values
+    y_test = torch.tensor(y_test.values, dtype=torch.long)
 
     return X_train, X_test, y_train, y_test, label_encoder

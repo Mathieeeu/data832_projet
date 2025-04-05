@@ -14,7 +14,7 @@ def plot_pca_with_centers(X: np.ndarray, y: np.ndarray, labels: list) -> None:
     plt.figure(figsize=(10, 6))
     scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='tab10', alpha=0.7)
     
-    # Ajouter les points moyens pour chaque genre
+    # Points moyens pour chaque genre
     centers = []
     for label in np.unique(y):
         mean_point = np.mean(X_pca[y == label], axis=0)
@@ -29,6 +29,7 @@ def plot_pca_with_centers(X: np.ndarray, y: np.ndarray, labels: list) -> None:
     
     plt.title("PCA - Réduction de Dimension avec Centres des Genres")
     plt.legend(loc='upper right')
+    plt.savefig('output/pca_plot.png')
     plt.show()
 
 def plot_train_test_loss(train_losses: list, test_losses: list) -> None:
@@ -42,6 +43,7 @@ def plot_train_test_loss(train_losses: list, test_losses: list) -> None:
     plt.xlabel('Epoch')
     plt.ylabel('Perte')
     plt.legend()
+    plt.savefig('output/loss_curve.png')
     plt.show()
 
 def plot_confusion_matrix(conf_matrix: np.ndarray, classes: list) -> None:
@@ -59,4 +61,5 @@ def plot_confusion_matrix(conf_matrix: np.ndarray, classes: list) -> None:
     plt.title('Matrice de confusion')
     plt.xlabel('Classe prédite')
     plt.ylabel('Classe réelle')
+    plt.savefig('output/confusion_matrix.png')
     plt.show()
