@@ -2,6 +2,8 @@
 
 _Mathieu - Louna_
 
+GitHub : [juste ici](https://github.com/Mathieeeu/data832_projet)
+
 -------------------------------------------
 
 ## Extraction des caractéristiques audio
